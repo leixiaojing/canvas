@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习-非零环绕原则</title>
+	<style>
+		#canvas {
+            border: 1px solid #000;
+            margin: 10px auto 0;
+            display: block;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+		canvas.width = 1200;
+		canvas.height = 800;
+		var ctx = canvas.getContext("2d");
+
+        ctx.save();
+
+        ctx.fillStyle = "#04449C";
+        ctx.shadowColor = "#7F7F7F";
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+        ctx.shadowBlur = 30;
+
+        ctx.beginPath();
+        ctx.arc(300,300,240,0,2 * Math.PI);
+        ctx.arc(300,300,180,0,2 * Math.PI,true);
+        ctx.closePath();
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+        ctx.rect(600,200,500,500);//顺时针
+        drawRect(ctx,680,250,340,150);
+        drawTriangle(ctx,750,470,650,620,850,620);
+        ctx.arc(960,550,80,0,2 * Math.PI,true);
+        ctx.closePath();
+
+        ctx.fill();
+        ctx.restore();
+
+	};
+    function drawRect(ctx,x,y,width,height) {
+        ctx.moveTo(x,y);
+        ctx.lineTo(x,y + height);
+        ctx.lineTo(x + width,y + height);
+        ctx.lineTo(x + width,y);
+        ctx.lineTo(x,y);
+
+    }
+    function drawTriangle(ctx,x1,y1,x2,y2,x3,y3) {
+        ctx.moveTo(x1,y1);
+        ctx.lineTo(x2,y2);
+        ctx.lineTo(x3,y3);
+        ctx.lineTo(x1,y1);
+    }
+	</script>		
+</body>
+</html>

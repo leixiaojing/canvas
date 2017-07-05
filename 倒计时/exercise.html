@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>弧线绘制</title>
+	<style>
+	#canvas {
+		display: block;
+		margin:30px auto;
+		border: 1px solid #ccc;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="700" height="700">
+		该浏览器版本过低。不支持canvas绘图
+	</canvas>
+	<script>
+		window.onload = function() {
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+
+			context.lineWidth = 2;
+			for (var i = 0; i < 10; i++) {
+				context.beginPath();
+				context.arc(30*(2*i + 1),30,20,0,0.2*(i + 1)*Math.PI);
+				context.stroke();
+			};
+			for (var i = 0; i < 10; i++) {
+				context.beginPath();
+				context.arc(30*(2*i + 1),90,20,0,0.2*(i + 1)*Math.PI);
+				context.closePath();
+				context.stroke();
+			};
+			for (var i = 0; i < 10; i++) {
+				context.beginPath();
+				context.arc(30*(2*i + 1),150,20,0,0.2*(i + 1)*Math.PI,true);
+				context.stroke();
+			};
+			for (var i = 0; i < 10; i++) {
+				context.beginPath();
+				context.arc(30*(2*i + 1),210,20,0,0.2*(i + 1)*Math.PI,true);
+				context.closePath();
+				context.stroke();
+			};
+			for (var i = 0; i < 10; i++) {
+				context.beginPath();
+				context.arc(30*(2*i + 1),270,20,0,0.2*(i + 1)*Math.PI,true);
+				context.fill();
+			};
+		}
+	</script>
+</body>
+</html>

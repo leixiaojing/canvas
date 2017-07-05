@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习</title>
+	<style>
+		canvas {
+			border:1px solid #000;
+			margin: 0 auto;
+			display: block;
+			margin-top: 50px;
+		}
+	</style>
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<canvas id="transform">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<canvas id="imgPattern">
+		对不起，该浏览器不支持canvas
+	</canvas>
+    <canvas id="canvasPattern">
+        对不起，该浏览器不支持canvas
+    </canvas>
+	<script>
+
+		var canvas = document.getElementById("canvas");
+		canvas.width = 1000;
+		canvas.height = 1100;
+		var ctx = canvas.getContext("2d");
+
+		var canvas_trans = document.getElementById("transform");
+		canvas_trans.width = 1000;
+		canvas_trans.height = 1100;
+		var context = canvas_trans.getContext("2d");
+
+		var pattern = document.getElementById("imgPattern");
+		pattern.width = 1000;
+		pattern.height = 400;
+		var cont = pattern.getContext("2d");
+
+        var pattern_01 = document.getElementById("canvasPattern");
+        pattern_01.width = 960;
+        pattern_01.height = 400;
+        var cont_01 = pattern_01.getContext("2d");
+
+		// canvas是基于状态绘制的
+		ctx.lineWidth = 10;
+		ctx.strokeStyle = "#F7A2A2";
+		ctx.beginPath();    //开始一段全新的绘制路径
+
+		ctx.lineTo(100,100);
+		ctx.lineTo(300,100);
+		ctx.lineTo(300,50);
+		ctx.lineTo(400,125);
+		ctx.lineTo(300,200);
+		ctx.lineTo(300,150);
+		ctx.lineTo(100,150);
+		ctx.closePath();    //绘制封闭的多边形
+		ctx.fillStyle = "yellow";
+		ctx.fill();
+		ctx.stroke();    //对于需要描边的图形，要先填充再描边
+
+		ctx.beginPath();
+		ctx.moveTo(100,250);
+		ctx.lineTo(150,350);
+		ctx.lineTo(100,450);
+
+		ctx.moveTo(200,250);
+		ctx.lineTo(250,350);
+		ctx.lineTo(200,450);
+
+		ctx.moveTo(300,250);
+		ctx.lineTo(350,350);
+		ctx.lineTo(300,450);
+
+		ctx.stroke();
+
+		ctx.lineWidth = 3;
+
+		ctx.beginPath();
+		ctx.lineTo(100,500);
+		ctx.lineTo(150,600);
+		ctx.lineTo(100,700);
+		ctx.strokeStyle = "red";
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineTo(200,500);
+		ctx.lineTo(250,600);
+		ctx.lineTo(200,700);
+		ctx.strokeStyle = "pink";
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineTo(300,500);
+		ctx.lineTo(350,600);
+		ctx.lineTo(300,700);
+		ctx.strokeStyle = "#B3A3FD";
+		ctx.stroke();
+
+		//绘制矩形
+		function drawRect(ctx,x,y,width,height,linewidth,strokestyle,fillstyle) {
+
+			ctx.linewidth = linewidth;
+			ctx.strokeStyle = strokestyle;
+			ctx.fillStyle = fillstyle;
+
+			ctx.fillRect(x,y,width,height);
+			ctx.strokeRect(x,y,width,height);
+		}
+		drawRect(ctx,450,50,200,200,3,"red","#ccc");
+		drawRect(ctx,500,100,200,200,3,"red","rgba(247,162,162,0.6)");
+
+		//绘制五角星 x,y为五角星中心点
+		function drawStar(ctx,x,y,R,r,rot) {
+			ctx.beginPath();
+			for (var i = 0; i < 5; i++) {
+				ctx.lineTo(x + R * Math.cos((18 + 72 * i - rot)/180 * Math.PI),y - R * Math.sin((18 + 72 * i -rot)/180 * Math.PI));
+				ctx.lineTo(x + r * Math.cos((54 + 72 * i - rot)/180 * Math.PI),y - r * Math.sin((54 + 72 * i -rot)/180 * Math.PI));
+			}
+			ctx.closePath();
+
+			ctx.fill();	
+			ctx.stroke();
+		}
+		ctx.linewidth = 4;
+		ctx.strokeStyle = "red";
+		ctx.fillStyle = "#ccc";
+
+		drawStar(ctx,850,150,100,50,30);
+
+		ctx.lineWidth = 12;
+		ctx.lineJoin = "miter";  //default 线条连接处的连接方式
+		//只有当lineJoin为miter时，才有效，默认值为10，当miterLimit大于10的时候，lineJoin转换成bevel
+		ctx.miterLimit = 20;     
+		drawStar(ctx,200,900,120,30,0);
+
+        ctx.lineJoin = "round";
+        drawStar(ctx,500,900,110,40,30);
+
+        ctx.lineJoin = "bevel";
+        drawStar(ctx,800,900,110,40,0);
+
+		//lineCap的用法,只用于线条的开始和结尾处，不能用于连接处
+		ctx.lineWidth = 20;
+		ctx.strokeStyle = "#414AF7";
+
+		ctx.beginPath();
+		ctx.lineTo(450,400);
+		ctx.lineTo(650,400);
+		ctx.lineCap = "butt";  // default
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineTo(450,450);
+		ctx.lineTo(650,450);
+		ctx.lineCap = "round";
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineTo(450,500);
+		ctx.lineTo(650,500);
+		ctx.lineCap = "square";
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.lineTo(450,360);
+		ctx.lineTo(450,520);
+
+		ctx.moveTo(650,360);
+		ctx.lineTo(650,520);
+
+		ctx.lineWidth = 3;
+		ctx.strokeStyle = "red";
+		ctx.stroke();
+
+		//图形变换
+		context.save()             //状态的保存
+		context.fillStyle = "pink";
+		context.translate(100,100);
+		context.fillRect(0,0,200,200);
+		context.restore();        // 状态的恢复
+
+		context.save();
+		context.fillStyle = "#fb3";
+		context.translate(200,200);  //图形变换是叠加的
+		context.fillRect(0,0,200,200);
+		context.restore();
+
+		//scale 缩放   对起始点的坐标和边框线条的宽度都做了缩放
+		context.save();
+		context.lineWidth = 3;
+		context.strokeRect(500,100,100,100);
+		context.restore();
+
+		context.save();
+		context.lineWidth = 3;
+		context.scale(1.2,1.2);
+		context.strokeRect(500,100,100,100);
+		context.restore();
+
+		context.save();
+		context.lineWidth = 3;
+		context.scale(1.4,1.4);
+		context.strokeRect(500,100,100,100);
+		context.restore();
+
+		//transform(a,b,c,d,e,f) 变换矩阵，在前一个变换矩阵的基础上叠加效果
+		//setTransform 重新设置变换矩阵
+		// a 水平方向缩放
+		// b 水平方向倾斜
+		// c 垂直方向倾斜
+		// d 垂直方向随访
+		// e 水平方向位移
+		// f 垂直方向位移
+
+        context.save();
+		context.transform(1.4,1,0,1,100,100);
+		context.transform(1,0,0,1,100,0);
+		context.strokeRect(0,400,200,200);
+
+		context.setTransform(1,0,0,1,100,100);
+		context.strokeRect(0,400,200,200);
+        context.restore();
+
+		//fillStyle 填充样式
+		//linear Gradient
+        var linearGrad = context.createLinearGradient(600,500,900,800);   //坐标值可以超过图形边框坐标
+        linearGrad.addColorStop(0,"#fff");
+        linearGrad.addColorStop(1,"#000");   //可是设置多个addColorStop值
+        context.fillStyle = linearGrad;
+        context.fillRect(600,500,200,200);
+
+        //radio Gradient
+        var radioGrad = context.createRadialGradient(700,1000,0,700,1000,250);
+        radioGrad.addColorStop(0,"#fff");
+        radioGrad.addColorStop(1,"#000");
+        context.fillStyle = radioGrad;
+        context.fillRect(600,800,200,200);
+
+        //createPattern  在水平和垂直方向重复图像
+        // createPattern(img,repeate-style);
+        var background = new Image();
+        background.src = "images/background.jpg";
+        background.onload = function() {
+            var imagePattern = cont.createPattern(this,"repeat"); //repeat repeat-c repeat-y
+            cont.fillStyle = imagePattern;
+            cont.fillRect(0,0,1000,500);
+        };
+
+        // createPattern(canvas,repeate-style);
+        var backgroundCanvas = canvasPattern();
+        console.log(backgroundCanvas.length);
+        cont_01.fillStyle = cont_01.createPattern(backgroundCanvas,"repeat");
+        cont_01.fillRect(0,0,1000,600);
+
+        function canvasPattern() {
+             var star = document.createElement("canvas");
+             console.log(star.length);
+             star.width = 80;
+             star.height = 80;
+             var backCanvas = star.getContext("2d");
+
+             backCanvas.linewidth = 4;
+             backCanvas.strokeStyle = "red";
+             backCanvas.fillStyle = "#ccc";
+
+             drawStar(backCanvas,40,40,40,20,0);
+             console.log(star.length);
+             return star;
+        }
+
+        // createPattern(video,repeate-style);
+
+
+
+	</script>
+</body>
+</html>

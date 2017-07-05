@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            margin: 10px auto 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas01">
+        对不起，该浏览器不支持canvas
+    </canvas>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = 1200;
+        canvas.height = 2000;
+
+        var canvas01 = document.getElementById("canvas01");
+        var context = canvas01.getContext("2d");
+        canvas01.width = 600;
+        canvas01.height = 600;
+
+        context.save();
+        context.beginPath();
+        context.lineTo(0,300);
+        context.lineTo(600,300);
+        context.moveTo(300,0);
+        context.lineTo(300,600);
+        context.closePath();
+
+        context.strokeStyle = "#ccc";
+        context.lineWidth = 2;
+        context.stroke();
+        context.restore();
+
+        context.save();
+        context.font = "bold 100px Arial";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillStyle = "#002C69";
+        context.fillText("CANVAS",300,300);
+        context.restore();
+
+
+//        strokeRoundrect(ctx,150,150,10,500,500);
+        fillRoundrect(ctx,50,50,10,500,500,"#bbada0");
+        for(var i = 0;i < 4;i ++)
+            for(var j = 0;j < 4;j ++)
+                fillRoundrect(ctx,70 + i * 120,70 + j * 120,6,100,100,"#ccc0b3");
+
+        arcTotest(ctx,600,50,1000,50,1000,450,200);
+
+        fillMoon(ctx,1.2,100,800,200,0);
+
+        //font canvas绘制文字
+        //默认值：“20px sans-serif”
+        //context.font = font-style font-variant font-weight font-size font-family
+
+        ctx.font = "bold 40px Arial";
+        ctx.fillStyle = "#6CAAFF";
+        ctx.strokeStyle = "#6CAAFF";
+
+        ctx.fillText("Hello Canvas!!",600,900,200);
+        ctx.strokeText("Hello Canvas!!",600,1000,200);
+
+        ctx.save();
+        var fontstyle = ctx.createLinearGradient(600,0,870,0);
+        fontstyle.addColorStop(0,"red");
+        fontstyle.addColorStop(0.2,"orange");
+        fontstyle.addColorStop(0.4,"yellow");
+        fontstyle.addColorStop(0.6,"green");
+        fontstyle.addColorStop(0.8,"blue");
+        fontstyle.addColorStop(1,"pink");
+
+        ctx.fillStyle = fontstyle;
+//        ctx.strokeStyle = fontstyle;
+        ctx.fillText("Hello Canvas!!",600,700);
+        ctx.strokeText("Hello Canvas!!",600,800);
+        ctx.restore();
+
+        var background = new Image();
+        background.src = "images/background01.jpg";
+        background.onload = function() {
+            var imagePattern = ctx.createPattern(this,"repeat"); //repeat repeat-c repeat-y
+            ctx.fillStyle = imagePattern;
+            ctx.font = "bold 70px Arial";
+            ctx.fillText("Hello Canvas!!",600,1100);
+            ctx.strokeText("Hello Canvas!!",600,1100);
+        };
+
+        //文本对齐
+        //context.textAlign = "left/center/right"
+        ctx.save();
+        ctx.textAlign = "left";
+        ctx.fillText("textalign = left",300,1300);
+        ctx.textAlign = "center";
+        ctx.fillText("textalign = center",300,1400);
+        ctx.textAlign = "right";
+        ctx.fillText("textalign = right",300,1500);
+        ctx.restore();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(300,1200);
+        ctx.lineTo(300,1600);
+        ctx.closePath();
+        ctx.strokeStyle = "#ccc";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        //context.textBaseline = "top/middle/bottom/"
+        ctx.save();
+        ctx.font = "bold 30px Arial";
+        ctx.textBaseline = "top";
+        ctx.fillText("中英文测试 I like English",700,1200);
+        drawBaseline(ctx,1200);
+        ctx.textBaseline = "middle";
+        ctx.fillText("中英文测试 I like English",700,1300);
+        drawBaseline(ctx,1300);
+        ctx.textBaseline = "bottom";
+        ctx.fillText("中英文测试 I like English",700,1400);
+        drawBaseline(ctx,1400);
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText("中英文测试 I like English",700,1500);
+        drawBaseline(ctx,1500);
+        ctx.textBaseline = "ideographic";
+        ctx.fillText("中英文测试 I like English",700,1600);
+        drawBaseline(ctx,1600);
+        ctx.textBaseline = "hanging";
+        ctx.fillText("中英文测试 I like English",700,1700);
+        drawBaseline(ctx,1700);
+
+        var textheight = Math.round(ctx.measureText("中英文测试 I like English").width);
+        ctx.fillText("上一行文字的宽度为"+ textheight + "px",700,1800);
+        ctx.restore();
+
+
+
+
+	};
+    function drawBaseline(ctx,h) {
+        var width = 1100;
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.lineTo(700,h);
+        ctx.lineTo(width,h);
+        ctx.strokeStyle = "#ccc";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.restore();
+    }
+    //两点之间的距离
+    function dis(x1,y1,x2,y2) {
+        return Math.sqrt((Math.pow((x1 - x2),2) + Math.pow((y1 - y2),2)),2);
+    }
+    //绘制圆角矩形
+    function fillRoundrect(ctx,x,y,radius,width,height,/*optional*/fillstyle) {
+
+        if(2 * radius > width || 2 * radius > height) {
+            return;
+        }
+        ctx.save();
+        ctx.translate(x,y);
+        pathRoundrect(ctx,radius,width,height);
+        ctx.fillStyle = fillstyle || "black";
+        ctx.fill();
+        ctx.restore();
+    }
+    function strokeRoundrect(ctx,x,y,radius,width,height,/*optional*/linewidth,/*optional*/strokestyle) {
+        if(2 * radius > width || 2 * radius > height) {
+            return;
+        }
+        ctx.save();
+        ctx.translate(x,y);
+        pathRoundrect(ctx,radius,width,height);
+        ctx.lineWidth = linewidth || 1;
+        ctx.strokeStyle = strokestyle || "black";
+        ctx.stroke();
+        ctx.restore();
+    }
+    //绘制圆角矩形
+    function pathRoundrect(ctx,radius,width,height) {
+
+        ctx.beginPath();
+        ctx.arc(radius,radius,radius,Math.PI,Math.PI * 3/2);
+        ctx.lineTo(width - radius,0) ;
+        ctx.arc(width - radius,radius,radius,Math.PI * 3/2,Math.PI * 2);
+        ctx.lineTo(width,height - radius);
+        ctx.arc(width - radius,height - radius,radius,0,Math.PI/2);
+        ctx.lineTo(radius,height);
+        ctx.arc(radius,height - radius,radius,Math.PI/2,Math.PI);
+        ctx.closePath();
+    }
+    //arcTo()
+    function arcTotest(ctx,x0,y0,x1,y1,x2,y2,radius) {
+        ctx.beginPath();
+        ctx.lineTo(x0,y0);
+        ctx.lineTo(x1,y1);
+        ctx.lineTo(x2,y2);
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#ccc";
+        ctx.stroke();
+
+        //arcTo
+        ctx.beginPath();
+        ctx.lineTo(x0,y0);
+        ctx.arcTo(x1,y1,x2,y2,radius);
+
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = "red";
+        ctx.stroke();
+    }
+    //绘制月亮
+    function fillMoon(ctx,d,x,y,R,rot,/*optional*/ fillstyle) {
+
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(rot/180 * Math.PI);
+        ctx.scale(R,R);
+        pathMoon(ctx,d);
+        ctx.fillStyle = fillstyle || "#fb5";
+        ctx.fill();
+        ctx.restore();
+    }
+    function pathMoon(ctx,d) {
+
+        ctx.beginPath();
+        ctx.arc(0,0,1,Math.PI/2,Math.PI * 3/2,true);
+        ctx.moveTo(0,-1);
+        //ctx.arcTo(d,0,0,1,dis(d,0,0,-1)/d);
+        //贝塞尔二次曲线
+        ctx.quadraticCurveTo(d,0,0,1);
+        ctx.closePath();
+    }
+	</script>
+</body>
+</html>

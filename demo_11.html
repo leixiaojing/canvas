@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>在canvas上使用其他控件</title>
+	<style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+        .container {
+            position: relative;
+            top: 0;
+            left: 50%;
+            width: 1200px;
+            margin-left: -600px;
+        }
+        .controler {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #000;
+            background-color: rgba(138,138,138,0.7);
+            padding: 10px 20px;
+        }
+        .container .note {
+            color: #fff;
+            font-size: 28px;
+            line-height: 34px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .container a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 4px 10px;
+            height: 24px;
+            text-align: center;
+            color: #fff;
+            line-height: 24px;
+            margin-right: 10px;
+        }
+        .controler .bgcolor {
+            background: #000;
+            padding: 0 10px;
+        }
+        .controler .white {
+            background: #fff;
+        }
+        .btn {
+            background-color: #0090B7;
+        }
+	</style> 
+</head>
+<body>
+	<div class="container">
+		<canvas id="canvas">
+			对不起，该浏览器不支持canvas
+		</canvas>
+		<div class="controler">
+			<div class="note">Canvas控制器</div>
+            <a href="javascript:;" class="btn" id="btn">停止运动</a>
+            <a href="javascript:;" class="bgcolor black" id="black">&nbsp;</a>
+            <a href="javascript:;" class="bgcolor white" id="white">&nbsp;</a>
+		</div>
+	</div>
+	<script>
+    var ball = [];
+    var isMove = true;
+    var innerColor = "white";
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+		canvas.width = 1200;
+		canvas.height = 800;
+		var ctx = canvas.getContext("2d");
+
+		for (var i = 0; i < 80; i++) {
+
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+
+            aball = {
+                x:Math.random() * canvas.width,
+                y:Math.random() * canvas.height,
+                r:14 + Math.random() * 70,
+                vx:(Math.random() * 5 + 5) * Math.pow(-1,Math.floor(Math.random() * 100)),
+                vy:(Math.random() * 5 + 5) * Math.pow(-1,Math.floor(Math.random() * 100)),
+                color:"rgb("+ r +","+ g +","+ b +")"
+            };
+            ball[i] = aball;
+        }
+        setInterval(function() {
+            draw(ctx);
+            if(isMove) {
+                update(canvas.width,canvas.height);
+            }
+        },50);
+
+        document.getElementById("btn").onclick = function() {
+            if(this.innerHTML == "停止运动")  {
+                this.innerHTML = "开始运动";
+                isMove = false;
+            }else {
+                this.innerHTML = "停止运动";
+                isMove = true;
+            }
+            //阻止事件冒泡或者禁止默认行为
+            return false;
+        };
+        document.getElementById("white").onclick = function() {
+            innerColor = "white";
+            return false;
+        };
+        document.getElementById("black").onclick = function() {
+            innerColor = "black";
+            return false;
+        }
+	};
+	function draw(ctx) {
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+
+        if(innerColor == "black") {
+            ctx.fillStyle = "black";
+            ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+        }
+
+        for (var i = 0; i < ball.length; i++) {
+//            ctx.globalCompositeOperation = "destination-over";
+            ctx.fillStyle = ball[i].color;
+            ctx.beginPath();
+            ctx.arc(ball[i].x,ball[i].y,ball[i].r,0,2 * Math.PI );
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+    function update(width,height) {
+        for (var i = 0; i < ball.length; i++) {
+           ball[i].x += ball[i].vx;
+           ball[i].y += ball[i].vy;
+           if(ball[i].x - ball[i].r < 0) {
+               ball[i].vx = -ball[i].vx;
+               ball[i].x = ball[i].r;
+           }
+           if(ball[i].x + ball[i].r > width) {
+               ball[i].vx = -ball[i].vx;
+               ball[i].x = width - ball[i].r;
+           }
+           if(ball[i].y - ball[i].r < 0) {
+               ball[i].vy = -ball[i].vy;
+               ball[i].y = ball[i].r;
+           }
+           if(ball[i].y + ball[i].r > height) {
+               ball[i].vy = -ball[i].vy;
+               ball[i].y = height - ball[i].r;
+           }
+       }
+    }
+	</script>		
+</body>
+</html>

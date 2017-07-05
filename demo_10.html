@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习-isPointInPth()</title>
+	<style>
+        canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+    var ball = [];
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+	window.onload = function() {
+
+		canvas.width = 1200;
+		canvas.height = 800;
+
+        for(var i = 0;i < 14;i ++ ) {
+            aBall = {
+                x:Math.random() * canvas.width,
+                y:Math.random() * canvas.height,
+                r:Math.random() * 80 + 5
+            };
+            ball[i] = aBall;
+        }
+
+        drawCircle(ctx);
+//        canvas.addEventListener("mouseup",doText);
+        canvas.addEventListener("mousemove",move);
+	};
+    function drawCircle(ctx) {
+        ctx.fillStyle = "#0067DE";
+        for(var i = 0;i < ball.length;i ++ ) {
+            ctx.beginPath();
+            ctx.arc(ball[i].x,ball[i].y,ball[i].r,0,2 * Math.PI);
+            ctx.fill();
+        }
+    }
+    function doText(event) {
+        var x = event.clientX - canvas.getBoundingClientRect().left;
+        var y = event.clientY - canvas.getBoundingClientRect().top;
+
+        for(var i = 0;i < ball.length;i ++ ) {
+            ctx.beginPath();
+            ctx.arc(ball[i].x,ball[i].y,ball[i].r,0,2 * Math.PI);
+
+            if(ctx.isPointInPath(x,y)) {
+                ctx.fillStyle = "red";
+                ctx.fill();
+            }
+        }
+    }
+    function move(event) {
+        var x = event.clientX - canvas.getBoundingClientRect().left;
+        var y = event.clientY - canvas.getBoundingClientRect().top;
+        draw(x,y);
+    }
+    function draw(x,y) {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(var i = 0;i < ball.length;i ++ ) {
+            ctx.beginPath();
+            ctx.arc(ball[i].x,ball[i].y,ball[i].r,0,2 * Math.PI);
+
+            if(ctx.isPointInPath(x,y))
+                ctx.fillStyle = "red";
+            else
+                ctx.fillStyle = "#0067DE";
+            ctx.fill();
+        }
+    }
+	</script>
+</body>
+</html>

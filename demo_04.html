@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习</title>
+	<style>
+        canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+        .btn {margin: 0 auto;width: 824px;}
+        .btn a {font-size: 24px;line-height: 54px;text-decoration: none;width: 200px;display: inline-block;}
+    </style>	
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+    <div class="btn">
+        <a href="javascript:;">source-over</a>
+        <a href="javascript:;">source-atop</a>
+        <a href="javascript:;">source-in</a>
+        <a href="javascript:;">source-out</a>
+        <a href="javascript:;">destination-over</a>
+        <a href="javascript:;">destination-atop</a>
+        <a href="javascript:;">destination-in</a>
+        <a href="javascript:;">destination-out</a>
+        <a href="javascript:;">lighter</a>
+        <a href="javascript:;">copy</a>
+        <!-- 异或计算 -->
+        <a href="javascript:;">xor</a>
+    </div>
+    <div></div>
+	<script>
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = 800;
+        canvas.height = 600;
+
+        view(ctx,"source-over");
+        for (var i = 0; i < 11; i++) {
+            document.getElementsByTagName("a")[i].onclick = function() {
+                console.log(this.innerHTML);
+                view(ctx,this.innerHTML);
+            }
+        }
+	};
+        function view(ctx,type) {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            //globalCompositeOperation
+            ctx.font = "40px Arial";
+            ctx.textAlign = "center";
+
+            ctx.save();
+            ctx.fillText("globalCompositeOperation:"+ type,400,80);
+            ctx.fillStyle = "#AF63CB";
+            ctx.fillRect(220,160,300,300);
+
+            ctx.globalCompositeOperation = type;
+            ctx.fillStyle = "#F1815D";
+            ctx.beginPath();
+            ctx.lineTo(460,240);
+            ctx.lineTo(280,540);
+            ctx.lineTo(640,540);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+	</script>
+</body>
+</html>

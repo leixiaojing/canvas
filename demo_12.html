@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习-绘制椭圆</title>
+	<style>
+		canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+	</style>
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+		canvas.width = 1200;
+		canvas.height = 800;
+		var ctx = canvas.getContext("2d");
+
+//        void ellipse(unrestricted double x, unrestricted double y, unrestricted double radiusX, unrestricted double radiusY, unrestricted double rotation, unrestricted double startAngle, unrestricted double endAngle, optional boolean anticlockwise = false);
+        if(ctx.ellipse) {
+            ctx.beginPath();
+            ctx.ellipse(600,400,300,200,0,0,2 * Math.PI);   //火狐，IE不支持
+            ctx.stroke();
+        }else {
+            alert("no ellipse");
+        }
+//        canvas 与 IE 6,7,8 兼容性问题
+//        explorercanvas
+//        http://code.google.com/p/explorercanvas/
+
+
+//        canvas图形库
+//        canvasplus
+//        https://code.google.com/p/canvasplus/
+//        Artisan JS
+//        http://artisanjs.com/
+//        Rgraph
+//        http://roopons.com.au/wp-content/plugins/viral-optins/js/rgraph/
+	}		
+	</script>
+</body>
+</html>

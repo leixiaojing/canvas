@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>扩展canvas的context方法</title>
+	<style>
+		canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+	</style>
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+
+    var originalMoveTo = CanvasRenderingContext2D.prototype.moveTo;
+    CanvasRenderingContext2D.prototype.lastMoveTiLoc = {};
+
+    CanvasRenderingContext2D.prototype.moveTo = function(x,y) {
+        originalMoveTo.apply(this,[x,y]);
+
+        this.lastMoveTiLoc.x = x;
+        this.lastMoveTiLoc.y = y;
+    };
+
+    CanvasRenderingContext2D.prototype.fillStar = function(R,r,rot) {
+        this.beginPath();
+        for (var i = 0; i < 5; i++) {
+            this.lineTo(this.lastMoveTiLoc.x + R * Math.cos((18 + 72 * i - rot)/180 * Math.PI),
+                            this.lastMoveTiLoc.y - R * Math.sin((18 + 72 * i -rot)/180 * Math.PI));
+            this.lineTo(this.lastMoveTiLoc.x + r * Math.cos((54 + 72 * i - rot)/180 * Math.PI),
+                            this.lastMoveTiLoc.y - r * Math.sin((54 + 72 * i -rot)/180 * Math.PI));
+        }
+        this.closePath();
+
+        this.fill();
+    };
+
+	window.onload = function() {
+
+		canvas.width = 1200;
+		canvas.height = 800;
+        ctx.fillStyle = "#fb3";
+        ctx.moveTo(600,400)
+        ctx.fillStar(200,100,0);
+
+	}
+	</script>		
+</body>
+</html>

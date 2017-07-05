@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas练习</title>
+	<style>
+        canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+	</style>        
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+    var ball = [];
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = 1200;
+        canvas.height = 800;
+
+//        ctx.globalAlpha = 0.7;
+        for (var i = 0; i < 80; i++) {
+
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+
+            aball = {
+                x:Math.random() * canvas.width,
+                y:Math.random() * canvas.height,
+                r:14 + Math.random() * 70,
+                vx:(Math.random() * 5 + 5) * Math.pow(-1,Math.floor(Math.random() * 100)),
+                vy:(Math.random() * 5 + 5) * Math.pow(-1,Math.floor(Math.random() * 100)),
+                color:"rgb("+ r +","+ g +","+ b +")"
+            };
+            ball[i] = aball;
+        }
+        setInterval(function() {
+            draw(ctx);
+            update(canvas.width,canvas.height);
+        },50)
+	};
+    function draw(ctx) {
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+        for (var i = 0; i < ball.length; i++) {
+            ctx.globalCompositeOperation = "xor";
+            ctx.fillStyle = ball[i].color;
+            ctx.beginPath();
+            ctx.arc(ball[i].x,ball[i].y,ball[i].r,0,2 * Math.PI );
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+    function update(width,height) {
+        for (var i = 0; i < ball.length; i++) {
+           ball[i].x += ball[i].vx;
+           ball[i].y += ball[i].vy;
+           if(ball[i].x - ball[i].r < 0) {
+               ball[i].vx = -ball[i].vx;
+               ball[i].x = ball[i].r;
+           }
+           if(ball[i].x + ball[i].r > width) {
+               ball[i].vx = -ball[i].vx;
+               ball[i].x = width - ball[i].r;
+           }
+           if(ball[i].y - ball[i].r < 0) {
+               ball[i].vy = -ball[i].vy;
+               ball[i].y = ball[i].r;
+           }
+           if(ball[i].y + ball[i].r > height) {
+               ball[i].vy = -ball[i].vy;
+               ball[i].y = height - ball[i].r;
+           }
+       }
+    }
+	</script>
+</body>
+</html>

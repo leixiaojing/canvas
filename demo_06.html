@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas剪辑区域-探照灯</title>
+	<style>
+        canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+	</style>   
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+	<script>
+    var searchLight = {
+        x:400,
+        y:300,
+        r:120,
+        vx:Math.random() * 5 + 10,
+        vy:Math.random() * 5 + 10
+    };
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = 800;
+        canvas.height = 600;
+        // 剪辑区域
+
+        setInterval(function() {
+            draw(ctx);
+            update(canvas.width,canvas.height);
+        },50)
+	};
+    function draw(ctx) {
+        ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
+
+        ctx.save();
+        ctx.fillRect(0,0,ctx.canvas.width,ctx.canvas.height);
+
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(searchLight.x,searchLight.y,searchLight.r,0,2 * Math.PI);
+        ctx.fill();
+        ctx.clip();
+
+        ctx.fillStyle = "#350092";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.font = "bold 40px Arial";
+        ctx.fillText("CANVAS",400,100);
+        ctx.fillText("CANVAS",400,500);
+
+        ctx.font = "bold 80px Arial";
+        ctx.fillText("CANVAS",400,300);
+        ctx.restore();
+    }
+    function update(width,height) {
+        searchLight.x += searchLight.vx;
+        searchLight.y += searchLight.vy;
+
+        if(searchLight.x - searchLight.r < 0) {
+            searchLight.vx = - searchLight.vx;
+            searchLight.x = searchLight.r;
+        }
+        if(searchLight.x + searchLight.r > width) {
+            searchLight.vx = - searchLight.vx;
+            searchLight.x = width - searchLight.r;
+        }
+        if(searchLight.y - searchLight.r < 0) {
+            searchLight.vy = - searchLight.vy;
+            searchLight.y = searchLight.r;
+        }
+        if(searchLight.y + searchLight.r > height) {
+            searchLight.vy = - searchLight.vy;
+            searchLight.y = height - searchLight.r;
+        }
+    }
+
+	</script>        
+</body>
+</html>

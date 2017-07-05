@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>小球运动效果</title>
+	<style>
+	#canvas {
+		display: block;
+		margin: 50px auto;
+		border: 1px solid #ccc;
+	}
+	</style>
+</head>
+<body>
+	<canvas id="canvas">
+		该浏览器版本过低。不支持canvas绘图
+	</canvas>
+<script>
+	var ball = {x:500,y:100,g:2,vx:2,vy:-10,radius:15,color:"#59A20B"}
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+		var context = canvas.getContext("2d");
+
+		canvas.width = 1024;
+		canvas.height = 768;
+		setInterval(function() {
+			render(context);
+			update(context);
+		},20)
+	}
+
+	function render(cxt) {
+		cxt.clearRect(0,0,cxt.canvas.width,cxt.canvas.height);
+
+		cxt.fillStyle = ball.color;
+
+		cxt.beginPath();
+		cxt.arc(ball.x,ball.y,ball.radius,0,2*Math.PI);
+		cxt.closePath();
+
+		cxt.fill();
+	}
+
+	function update(cxt) {
+		ball.x += ball.vx;
+		ball.y += ball.vy;
+		ball.vy += ball.g;
+		if(ball.y >= cxt.canvas.height - ball.radius) {
+			ball.y = cxt.canvas.height - ball.radius
+			ball.vy = -ball.vy*0.4;
+		}
+	}
+</script>
+</body>
+</html>	

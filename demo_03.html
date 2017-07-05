@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas高级内容</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            margin: 20px auto 0;
+            display: block;
+        }
+    </style>	
+</head>
+<body>
+	<canvas id="canvas">
+		对不起，该浏览器不支持canvas
+	</canvas>
+    <canvas id="canvas01">
+        对不起，该浏览器不支持canvas
+    </canvas>
+	<script>
+	window.onload = function() {
+		var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        canvas.width = 1200;
+        canvas.height = 500;
+
+        var canvas01 = document.getElementById("canvas01");
+        var ctx01 = canvas01.getContext("2d");
+        canvas01.width = 1200;
+        canvas01.height = 800;
+
+        //阴影
+        ctx.save();
+        ctx.font = "bold 100px Arial";
+        ctx.fillStyle = "#373DB7";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "#ccc";
+        ctx.shadowOffsetX = -10;
+        ctx.shadowOffsetY = -10;
+        ctx.shadowBlur = 0;
+        ctx.fillText("Canvas",600,100);
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = "#E03737";
+        ctx.shadowColor = "pink";
+        ctx.shadowBlur = 5;
+        ctx.shadowOffsetX = 10;
+        ctx.shadowOffsetY = 10;
+        ctx.fillRect(350,200,200,200);
+        drawStar(ctx,800,300,100,30);
+        ctx.restore();
+
+        //globalAlpha
+        ctx01.globalAlpha = 0.7;
+        for(var i = 0;i < 70; i ++ ) {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+
+            ctx01.fillStyle = "rgb(" + r + "," + g + "," + b +")";
+            ctx01.beginPath();
+            ctx01.arc(Math.random() * canvas01.width,Math.random() * canvas01.height,5 + Math.random() * 80,0,Math.PI * 2);
+            ctx01.fill();
+        }
+
+	};
+    function drawStar(ctx,x,y,R,rot) {
+
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate(rot/180 * Math.PI);
+        ctx.scale(R,R);
+        startPath(ctx);
+
+        ctx.fillStyle = "#fb3";
+        // ctx.lineWidth = 3;
+        // ctx.strokeStyle = "#F5FF8B";
+        // ctx.lineJoin = "round"
+        ctx.fill();
+        // ctx.stroke();
+        ctx.restore()
+    }
+
+    function startPath(ctx) {
+        ctx.beginPath();
+        for (var i = 0; i < 5; i++) {
+            ctx.lineTo(-Math.cos((18 + 72 * i)/180 * Math.PI),-Math.sin((18 + 72 * i)/180 * Math.PI));
+            ctx.lineTo(-Math.cos((54 + 72 * i)/180 * Math.PI)/2,-Math.sin((54 + 72 * i)/180 * Math.PI)/2);
+        }
+        ctx.closePath();
+    }
+	</script>        
+</body>
+</html>
